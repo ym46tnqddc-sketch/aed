@@ -1,69 +1,75 @@
+import { createClient } from '@supabase/supabase-js';
 import type { Defibrillator } from '../types/defibrillator';
 
-const DATA_SOURCES = [
-  'https://www.data.gouv.fr/fr/datasets/r/01aa7df5-1bfc-4ba8-ade1-52e52d8dddf2',
-  'https://www.data.gouv.fr/fr/datasets/r/f97ea53c-87c7-4458-957a-7c7de63e0db3',
-  'https://www.data.gouv.fr/fr/datasets/r/cc4c1917-73ca-4db7-a7dd-8cdb0c1c7938',
-];
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-function parseCSV(csv: string): Defibrillator[] {
-  const lines = csv.split('\n');
-  if (lines.length < 2) return [];
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  const headers = lines[0].split(/[,;]/).map(h => h.trim().toLowerCase());
-  const defibrillators: Defibrillator[] = [];
+let isSyncing = false;
 
-  for (let i = 1; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
+async function syncDataIfNeeded(): Promise<void> {
+  if (isSyncing) return;
 
-    const values = line.split(/[,;]/).map(v => v.trim().replace(/^"|"$/g, ''));
+  const { count } = await supabase
+    .from('defibrillators')
+    .select('*', { count: 'exact', head: true });
 
-    const latIndex = headers.findIndex(h => h.includes('lat') && !h.includes('long'));
-    const lonIndex = headers.findIndex(h => h.includes('lon'));
-    const nomIndex = headers.findIndex(h => h.includes('nom') || h.includes('name'));
-    const adresseIndex = headers.findIndex(h => h.includes('adresse') || h.includes('address'));
-    const villeIndex = headers.findIndex(h => h.includes('ville') || h.includes('city') || h.includes('commune'));
-    const cpIndex = headers.findIndex(h => h.includes('postal') || h.includes('cp'));
+  if (count === 0 && !isSyncing) {
+    isSyncing = true;
+    console.log('Database empty, triggering initial sync...');
 
-    if (latIndex === -1 || lonIndex === -1) continue;
+    try {
+      const syncUrl = `${supabaseUrl}/functions/v1/sync-defibrillators`;
+      const response = await fetch(syncUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+      });
 
-    const lat = parseFloat(values[latIndex]);
-    const lon = parseFloat(values[lonIndex]);
-
-    if (isNaN(lat) || isNaN(lon)) continue;
-
-    defibrillators.push({
-      id: `${lat}-${lon}-${i}`,
-      nom: nomIndex !== -1 ? values[nomIndex] : 'Defibrillator',
-      adresse: adresseIndex !== -1 ? values[adresseIndex] : '',
-      ville: villeIndex !== -1 ? values[villeIndex] : '',
-      code_postal: cpIndex !== -1 ? values[cpIndex] : '',
-      latitude: lat,
-      longitude: lon,
-    });
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Sync completed:', result);
+      }
+    } catch (error) {
+      console.error('Error syncing data:', error);
+    } finally {
+      isSyncing = false;
+    }
   }
-
-  return defibrillators;
 }
 
 export async function fetchDefibrillators(): Promise<Defibrillator[]> {
-  const allDefibrillators: Defibrillator[] = [];
+  try {
+    await syncDataIfNeeded();
 
-  for (const source of DATA_SOURCES) {
-    try {
-      const response = await fetch(source);
-      if (!response.ok) continue;
+    const { data, error } = await supabase
+      .from('defibrillators')
+      .select('*')
+      .order('ville', { ascending: true });
 
-      const text = await response.text();
-      const defibrillators = parseCSV(text);
-      allDefibrillators.push(...defibrillators);
-    } catch (error) {
-      console.error(`Error fetching from ${source}:`, error);
+    if (error) {
+      console.error('Error fetching defibrillators:', error);
+      return [];
     }
-  }
 
-  return allDefibrillators;
+    return (data || []).map(d => ({
+      id: d.id,
+      nom: d.nom,
+      adresse: d.adresse,
+      ville: d.ville,
+      code_postal: d.code_postal,
+      latitude: parseFloat(d.latitude),
+      longitude: parseFloat(d.longitude),
+      acces: d.acces,
+      disponibilite: d.disponibilite,
+      tel: d.tel,
+    }));
+  } catch (error) {
+    console.error('Error in fetchDefibrillators:', error);
+    return [];
+  }
 }
 
 export function filterDefibrillators(

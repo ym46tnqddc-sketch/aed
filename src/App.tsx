@@ -41,56 +41,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="bg-red-600 rounded-lg p-2 shadow-md">
-                <Heart className="text-white fill-white" size={32} />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-red-600">
-                  AED MAP
-                </h1>
-                <p className="text-xs text-gray-500">
-                  INNOVATION IN MEDICINE
-                </p>
-              </div>
-            </div>
-            <nav className="hidden md:flex items-center space-x-1">
-              <a href="#" className="px-6 py-2 bg-red-600 text-white font-medium rounded-full hover:bg-red-700 transition-colors">
-                Home
-              </a>
-              <a href="#" className="px-6 py-2 text-gray-700 font-medium hover:text-red-600 transition-colors">
-                Knowledge Test
-              </a>
-              <a href="#" className="px-6 py-2 text-gray-700 font-medium hover:text-red-600 transition-colors">
-                First Aid
-              </a>
-              <a href="#" className="px-6 py-2 text-gray-700 font-medium hover:text-red-600 transition-colors">
-                Virtual Assistant
-              </a>
-              <a href="#" className="px-6 py-2 text-gray-700 font-medium hover:text-red-600 transition-colors">
-                About
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <div className="bg-red-300 py-3 px-4 text-center">
-        <p className="text-gray-800 font-medium">
-          <span className="font-bold">⚡ EMERGENCY! ⚡</span> In case of a serious problem, call immediately by clicking here:{' '}
-          <a href="tel:112" className="bg-white px-4 py-1 rounded-full font-bold text-gray-800 hover:bg-gray-100 transition-colors inline-block ml-2">
-            112
-          </a>
-        </p>
-      </div>
 
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h2 className="text-5xl font-bold text-red-400 mb-4">
-            AED Locator
+            AED MAP
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
             Find automated external defibrillators near you through our interactive map.

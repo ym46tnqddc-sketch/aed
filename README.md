@@ -1,24 +1,29 @@
 # AED MAP
 
-Interactive application for locating automated external defibrillators (AEDs) across France.
+Application interactive pour localiser les défibrillateurs automatiques externes (DAE) en France.
 
-## Project Structure
+## Structure du Projet
 
 ```
 .
-├── frontend/          # React frontend application
-│   ├── src/          # Source code
-│   ├── public/       # Static assets
-│   └── package.json  # Frontend dependencies
+├── frontend/          # Application frontend React
+│   ├── public/        # Assets statiques (HTML, CSS)
+│   ├── src/           # Code source
+│   │   ├── components/  # Composants React (JSX)
+│   │   ├── services/    # Services API
+│   │   └── types/       # Types de données
+│   ├── package.json   # Dépendances frontend
+│   └── .env           # Variables d'environnement frontend
 │
-└── backend/          # Supabase backend
-    ├── supabase/     # Supabase configuration
-    │   ├── migrations/  # Database migrations
-    │   └── functions/   # Edge functions
-    └── .env          # Backend environment variables
+└── backend/           # Backend Supabase
+    ├── supabase/      # Configuration Supabase
+    │   ├── migrations/  # Migrations de base de données
+    │   └── functions/   # Edge Functions
+    ├── .env           # Variables d'environnement backend
+    └── README.md      # Documentation backend
 ```
 
-## Setup
+## Installation
 
 ### Frontend
 
@@ -28,29 +33,32 @@ npm install
 npm run dev
 ```
 
+Le frontend sera accessible sur `http://localhost:5173`
+
 ### Backend
 
-The backend uses Supabase. Configuration is in the `backend/` directory.
+Le backend utilise Supabase. La configuration se trouve dans le répertoire `backend/`.
 
-- Database migrations are in `backend/supabase/migrations/`
-- Edge functions are in `backend/supabase/functions/`
+- Migrations de la base de données : `backend/supabase/migrations/`
+- Edge Functions : `backend/supabase/functions/`
 
-## Features
+## Fonctionnalités
 
-- Real-time AED location mapping
-- Search by city, postal code, or address
-- Medical-themed responsive design
-- Data sourced from data.gouv.fr via Supabase backend
+- Carte interactive des emplacements de DAE
+- Recherche par ville, code postal ou adresse
+- Design responsive à thème médical
+- Données provenant de data.gouv.fr via le backend Supabase
 
-## Technology
+## Technologies
 
 **Frontend:**
-- React 18 + TypeScript
+- React 18
 - Vite
-- Tailwind CSS
+- CSS vanilla
+- JSX (JavaScript)
 - Supabase Client
 
 **Backend:**
-- Supabase (PostgreSQL database)
+- Supabase (base de données PostgreSQL)
 - Edge Functions (Deno runtime)
 - Row Level Security (RLS)

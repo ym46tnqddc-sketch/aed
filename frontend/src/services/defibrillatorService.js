@@ -1,14 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
-import type { Defibrillator } from '../types/defibrillator';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_SUPABASE_ANON_KEY;
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 let isSyncing = false;
 
-async function syncDataIfNeeded(): Promise<void> {
+async function syncDataIfNeeded() {
   if (isSyncing) return;
 
   const { count } = await supabase
@@ -17,7 +16,7 @@ async function syncDataIfNeeded(): Promise<void> {
 
   if (count === 0 && !isSyncing) {
     isSyncing = true;
-    console.log('Database empty, triggering initial sync...');
+    console.log('Base de données vide, synchronisation initiale...');
 
     try {
       const syncUrl = `${supabaseUrl}/functions/v1/sync-defibrillators`;
@@ -30,17 +29,17 @@ async function syncDataIfNeeded(): Promise<void> {
 
       if (response.ok) {
         const result = await response.json();
-        console.log('Sync completed:', result);
+        console.log('Synchronisation terminée:', result);
       }
     } catch (error) {
-      console.error('Error syncing data:', error);
+      console.error('Erreur lors de la synchronisation:', error);
     } finally {
       isSyncing = false;
     }
   }
 }
 
-export async function fetchDefibrillators(): Promise<Defibrillator[]> {
+export async function fetchDefibrillators() {
   try {
     await syncDataIfNeeded();
 
@@ -50,7 +49,7 @@ export async function fetchDefibrillators(): Promise<Defibrillator[]> {
       .order('ville', { ascending: true });
 
     if (error) {
-      console.error('Error fetching defibrillators:', error);
+      console.error('Erreur lors de la récupération des défibrillateurs:', error);
       return [];
     }
 
@@ -67,15 +66,12 @@ export async function fetchDefibrillators(): Promise<Defibrillator[]> {
       tel: d.tel,
     }));
   } catch (error) {
-    console.error('Error in fetchDefibrillators:', error);
+    console.error('Erreur dans fetchDefibrillators:', error);
     return [];
   }
 }
 
-export function filterDefibrillators(
-  defibrillators: Defibrillator[],
-  searchTerm: string
-): Defibrillator[] {
+export function filterDefibrillators(defibrillators, searchTerm) {
   if (!searchTerm.trim()) return defibrillators;
 
   const term = searchTerm.toLowerCase();

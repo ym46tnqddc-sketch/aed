@@ -1,29 +1,30 @@
 # AED MAP - Frontend
 
-React application for locating automated external defibrillators (AEDs) in France.
+Application React pour localiser les défibrillateurs automatiques externes (DAE) en France.
 
-## Features
+## Fonctionnalités
 
-- Interactive map showing AED locations
-- Search by city, postal code, or address
-- Responsive design with medical theme
-- Real-time data from Supabase
+- Carte interactive affichant les emplacements des DAE
+- Recherche par ville, code postal ou adresse
+- Design responsive avec thème médical
+- Données en temps réel depuis Supabase
 
-## Tech Stack
+## Technologies
 
 - React 18
-- TypeScript
 - Vite
-- Tailwind CSS
+- CSS vanilla
+- JSX (JavaScript)
 - Supabase Client
-- Lucide Icons
 
-## Development
+## Développement
 
 ```bash
 npm install
 npm run dev
 ```
+
+L'application sera accessible sur `http://localhost:5173`
 
 ## Build
 
@@ -31,11 +32,11 @@ npm run dev
 npm run build
 ```
 
-## Environment Variables
+## Variables d'Environnement
 
-Create a `.env` file with:
+Le fichier `.env` contient :
 
 ```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=url_supabase
+VITE_SUPABASE_SUPABASE_ANON_KEY=clé_anonyme_supabase
 ```

@@ -1,25 +1,30 @@
 # AED MAP - Backend
 
-This directory contains the backend infrastructure for the AED MAP application.
+Ce répertoire contient l'infrastructure backend de l'application AED MAP.
 
 ## Structure
 
-- `supabase/` - Supabase configuration and edge functions
-  - `migrations/` - Database migrations
-  - `functions/` - Edge functions for data synchronization
+- `supabase/` - Configuration Supabase et edge functions
+  - `migrations/` - Migrations de base de données
+  - `functions/` - Edge functions pour la synchronisation des données
 
-## Database
+## Base de Données
 
-The application uses Supabase as its database and backend infrastructure.
+L'application utilise Supabase comme base de données et infrastructure backend.
 
 ### Tables
 
-- `defibrillators` - Stores AED location data across France
+- `defibrillators` - Stocke les données de localisation des DAE en France
 
 ### Edge Functions
 
-- `sync-defibrillators` - Fetches defibrillator data from data.gouv.fr and syncs to the database
+- `sync-defibrillators` - Récupère les données des défibrillateurs depuis data.gouv.fr et les synchronise dans la base de données
 
-## Environment Variables
+## Variables d'Environnement
 
-See `.env` file for Supabase configuration.
+Le fichier `.env` contient la configuration Supabase :
+
+```
+SUPABASE_URL=url_supabase
+SUPABASE_ANON_KEY=clé_anonyme_supabase
+```
